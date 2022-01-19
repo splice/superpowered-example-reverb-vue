@@ -40,12 +40,15 @@ class ReverbProcessor extends SuperpoweredWebAudio.AudioWorkletProcessor {
   }
 
   processAudio(inputBuffer, outputBuffer, buffersize, parameters) {
-    if (this.reverb.process)
-      this.reverb.process(
-        inputBuffer.pointer,
-        outputBuffer.pointer,
-        buffersize
-      );
+    // Ensure the samplerate is in sync on every audio processing callback
+    this.reverb.samplerate = this.samplerate;
+
+    // Render the output buffers
+    this.reverb.process(
+      inputBuffer.pointer,
+      outputBuffer.pointer,
+      buffersize
+    );
   }
 }
 
